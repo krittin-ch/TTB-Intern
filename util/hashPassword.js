@@ -1,24 +1,22 @@
-const argon2 = require('argon2');
+const argon2 = require('argon2')
+const crypto = require('crypto')
 
+const hashingConfig = { 
+    parallelism: 1,
+    memoryCost: 64000,
+    timeCost: 3
+}
+ 
 async function hashPassword(password) {
-    try {
-        const hash = await argon2.hash(password);
-        return hash
-    } catch (err) {
-        console.log(err);
-    }
+    let salt = crypto.randomBytes(16);
+    return await argon2.hash(password, {
+        hashingConfig,
+        salt
+    })
+}
+ 
+async function verifyPasswordWithHash(password, hash) {
+    return await argon2.verify(hash, password);
 }
 
-async function verifyPassword(hash, password) {
-    try {
-        if (await argon2.verify(hash, password)) {
-            console.log('Password is correct!');
-        } else {
-            console.log('Password is incorrect!');
-        }
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-module.exports = { hashPassword, verifyPassword }
+module.exports = { hashPassword, verifyPasswordWithHash }
