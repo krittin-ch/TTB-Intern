@@ -13,24 +13,4 @@ The database consists of 2 tables:
     middleName: VARCHAR(255)
     lastName: VARCHR(255)
 
-
-,--------------------------.
-|UserAccount               |
-|--------------------------|
-|userID: varchar(255)      |
-|--                        |
-|userName: varchar(255)    |
-|userEmail: varchar(255)   |
-|userPassword: varchar(255)|
-`--------------------------'
-              |             
-              |             
- ,------------------------. 
- |UserInfo                | 
- |------------------------| 
- |userID: varchar(255)    | 
- |--                      | 
- |firstName: varchar(255) | 
- |middleName: varchar(255)| 
- |lastName: varchar(255)  | 
- `------------------------' 
+![alt text](../docs/diagram.png)
