@@ -23,8 +23,8 @@ There are 4 folders in this project
     1. hashPassword.js exports the hashPassword and verifyPasswordWithHash function (verifyPasswordWithHash is never used in this project)
     2. hashUserId exports the hashUserId function
 
-app.js -- The main part of the project, importing the routes and setting up the JSON Middleware
+app.js      -- The main part of the project, importing the routes and setting up the JSON Middleware
 
-config.js -- The port is set to 5000
+config.js   -- The port is set to 5000
 
 knexfile.js -- Knex Configuration, setting Knex.js connection to a MySQL database -- user_information
