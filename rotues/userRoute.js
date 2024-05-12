@@ -5,8 +5,8 @@ const router = express.Router()
 // Obtaining the ORM of Users
 const { UserAccount, UserInfo } = require('../models/users_database')
 
-const { hashPassword, verifyPasswordWithHash } = require('../util/hashPassword')
-const { hashUserId, verifyUserIdWithHash } = require('../util/hashUserId')
+const { hashPassword, verifyPasswordWithHash } = require('../utils/hashPassword')
+const { hashUserId } = require('../utils/hashUserId')
 
 // POST METHOD
 // Creating a new user
@@ -16,27 +16,26 @@ router.post('/create_user', async (req, res) => {
             !req.body.userEmail ||
             !req.body.firstName ||
             !req.body.lastName ||
-            !req.body.password
+            !req.body.userPassword
         ) {
             return res.status(400).send({
                 message: 'Please send the required fields'
             })
         }
 
-        const userID = await hashUserId(req.body.userName + ':' + req.body.Email)
+        const userID = await hashUserId(req.body.userName + ':' + req.body.userEmail)
 
         const userAccountData = {
             userName: req.body.userName,
             userEmail: req.body.userEmail,
-            userPassword: await hashPassword(req.body.password),
+            userPassword: await hashPassword(req.body.userPassword),
             userID: userID
         }
 
         const userInfoData = {
-            userName: req.body.userName,
-            fName: req.body.firstName,
-            mName: req.body.middleName || null,
-            lName: req.body.lastName,
+            firstName: req.body.firstName,
+            middleName: req.body.middleName || null,
+            lastName: req.body.lastName,
             userID: userID
         }
 
@@ -56,8 +55,8 @@ router.get('/get/all_user', async (req, res) => {
     try {
         // This command does not return the users' passwords and userId
         const users = await UserAccount.query()
-        .select('userinfo.fName', 'userinfo.mName', 'userinfo.lName', 'useraccount.userEmail', 'useraccount.userName')
-        .join('userinfo', 'userinfo.userName', '=', 'useraccount.userName')
+        .select('userinfo.firstName', 'userinfo.middleName', 'userinfo.lastName', 'useraccount.userEmail', 'useraccount.userName')
+        .join('userinfo', 'userinfo.userID', '=', 'useraccount.userID')
   
         res.status(201).send(users)
         res.end()
@@ -72,7 +71,7 @@ router.get('/get/:userID', async (req, res) => {
     try {
         // This command does not return the users' passwords and userId
         const user = await UserAccount.query()
-        .select('userinfo.fName', 'userinfo.mName', 'userinfo.lName', 'useraccount.userEmail', 'useraccount.userName')
+        .select('userinfo.firstName', 'userinfo.middleName', 'userinfo.lastName', 'useraccount.userEmail', 'useraccount.userName')
         .join('userinfo', 'userinfo.userID', '=', 'useraccount.userID')
         .where('useraccount.userID', req.params.userID)
 
@@ -92,13 +91,13 @@ router.put('/update/:userID', async (req, res) => {
         .where('userID', req.params.userID)
 
         const userInfo = await UserInfo.query()
-        .select('userName', 'fName', 'mName', 'lName', 'userID')
+        .select('firstName', 'middleName', 'lastName', 'userID')
         .where('userID', req.params.userID)
 
         let newPassword
 
-        if (req.body.password) {
-            newPassword = await hashPassword(req.body.password)
+        if (req.body.userPassword) {
+            newPassword = await hashPassword(req.body.userPassword)
         } else {
             newPassword = userAccount[0].userPassword
         }
@@ -109,8 +108,6 @@ router.put('/update/:userID', async (req, res) => {
             userPassword: newPassword || userAccount[0].userPassword,
         }
 
-        console.log(userAccountData)
-
         const userID = hashUserId(
             userAccountData.userName
             + ':' 
@@ -118,10 +115,9 @@ router.put('/update/:userID', async (req, res) => {
         )
 
         const userInfoData = {
-            userName: req.body.userName || userInfo[0].userName,
-            fName: req.body.firstName || userInfo[0].fName,
-            mName: req.body.middleName || userInfo[0].mName,
-            lName: req.body.lastName || userInfo[0].lName,
+            firstName: req.body.firstName || userInfo[0].firstName,
+            middleName: req.body.middleName || userInfo[0].middleName,
+            lastName: req.body.lastName || userInfo[0].lastName,
         }
 
         const userAccountUpdate = await UserAccount.query()

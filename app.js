@@ -10,7 +10,7 @@ app.use(express.json());
 app.use('/users', userRoutes);
 
 app.get('/', (req, res) => {
-    res.send('Hi')
+    res.send('Hello World!')
     res.end
 })
 
