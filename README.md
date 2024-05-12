@@ -12,6 +12,8 @@ There are 4 folders in this project
     1. The database is stored as user_information.sql
     2. Please find README.md inside the folder for further information
 
+    ![alt text](/docs/diagram.png)
+
 2. models 
     1. users_database.js acquired the knexConfig from knexfile.js and initialize as a obejct by Objection.js
 
