@@ -52,7 +52,7 @@ router.post('/create_user', async (req, res) => {
 
 // GET METHOD
 // Retrieving all users
-router.get('/all_user', async (req, res) => {
+router.get('/get/all_user', async (req, res) => {
     try {
         // This command does not return the users' passwords and userId
         const users = await UserAccount.query()
@@ -68,7 +68,7 @@ router.get('/all_user', async (req, res) => {
 
 // GET METHOD
 // Retrieving a single users
-router.get('/:userID', async (req, res) => {
+router.get('/get/:userID', async (req, res) => {
     try {
         // This command does not return the users' passwords and userId
         const user = await UserAccount.query()
