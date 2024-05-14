@@ -8,7 +8,7 @@ const hashingConfig = {
 }
  
 async function hashPassword(password) {
-    let salt = crypto.randomBytes(16);
+    let salt = crypto.randomBytes(16)
     return await argon2.hash(password, {
         hashingConfig,
         salt
@@ -16,7 +16,7 @@ async function hashPassword(password) {
 }
  
 async function verifyPasswordWithHash(password, hash) {
-    return await argon2.verify(hash, password);
+    return await argon2.verify(hash, password)
 }
 
 module.exports = { hashPassword, verifyPasswordWithHash }

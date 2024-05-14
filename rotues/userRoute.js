@@ -42,10 +42,10 @@ router.post('/create_user', async (req, res) => {
         const newUserAcccount = await UserAccount.query().insert(userAccountData)
         const newUserInfo = await UserInfo.query().insert(userInfoData)
 
-        return res.status(201).send({newUserAcccount, newUserInfo});
+        res.status(201).json({newUserAcccount, newUserInfo});
 
     } catch (err) {
-        res.status(500).send(err);
+        res.status(500).json({ error: err.message })
     }
 })
 
@@ -58,10 +58,9 @@ router.get('/get/all_user', async (req, res) => {
         .select('userinfo.firstName', 'userinfo.middleName', 'userinfo.lastName', 'useraccount.userEmail', 'useraccount.userName')
         .join('userinfo', 'userinfo.userID', '=', 'useraccount.userID')
   
-        res.status(201).send(users)
-        res.end()
+        res.status(200).json(users)
     } catch(err) {
-        res.status(500).send(err)
+        res.status(500).json({ error: err.message })
     }
 })
 
@@ -75,10 +74,9 @@ router.get('/get/:userID', async (req, res) => {
         .join('userinfo', 'userinfo.userID', '=', 'useraccount.userID')
         .where('useraccount.userID', req.params.userID)
 
-        res.send(user)
-        res.end()
+        res.status(200).json(user)
     } catch(err) {
-        res.send(err)
+        res.status(500).json({ error: err.message })
     }
 })
 
@@ -128,13 +126,12 @@ router.put('/update/:userID', async (req, res) => {
         .where('userID', req.params.userID)
         .patch(userInfoData)
 
-        res.status(201).send({
-            update: {userAccountUpdate, userInforUpdate},
-            message: `${userAccountData.userName} is updated successfully`})
-        res.end()
+        res.status(200).json({
+            message: `${userAccountData.userName} updated successfully`
+        })
+
     } catch(err) {
-        res.status(500).send(err)
-        res.end()
+        res.status(500).json({ error: err.message })
     }
 
 })
@@ -146,10 +143,11 @@ router.delete('/delete/:userID', async (req, res) => {
         const deleteUserAccount = await UserAccount.query().delete().where('userID', req.params.userID)
         const deleteUserInfo = await UserInfo.query().delete().where('userID', req.params.userID)
         
-        res.status(201).send(`${req.params.userID} is successfully deleted`)
-        res.end()
+        res.status(200).json({
+            message: `User with ID ${req.params.userID} deleted successfully`
+        })
     } catch(err) {
-        res.status(500).send(err)
+        res.status(500).json({ error: err.message })
     }
 })
 
