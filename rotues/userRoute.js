@@ -126,6 +126,7 @@ router.put('/update/:userID', async (req, res) => {
         .where('userID', req.params.userID)
         .patch(userInfoData)
 
+
         res.status(200).json({
             message: `${userAccountData.userName} updated successfully`
         })
